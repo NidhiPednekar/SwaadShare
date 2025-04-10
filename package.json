@@ -1,0 +1,12 @@
+{
+    "name": "cookle-cookbook",
+    "version": "1.0.0",
+    "description": "Cookle Cookbook App",
+    "main": "script.js",
+    "scripts": {
+      "start": "node script.js"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+  

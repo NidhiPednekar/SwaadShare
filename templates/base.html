@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SwaadShare is a recipes sharing and online cookbook web application"/>
+    <meta name="keywords" content="recipes, share, search recipes, online cookbook, recipes database">
+    <!--Favicon-->
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" title="SwaadShare Thumbnail Image">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" type="text/css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    {% block styles %}
+    {% endblock %}
+    <!-- Email JS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function(){
+            emailjs.init("user_ezh2VDVtQvTX8KoZQDplM");
+        })();
+    </script>
+</head>
+
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top autohide">
+            <!-- Container wrapper -->
+            <div class="container">
+                <!-- Navbar brand - replaced logo with text -->
+                <a class="navbar-brand me-2 logo-text" href="#">
+                    SwaadShare
+                </a>
+            
+                <!-- Toggle button -->
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarButtonsExample" aria-controls="navbarButtonsExample"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+        
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarButtonsExample">
+                    <!-- Left links -->
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="{{ url_for('home') }}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="{{ url_for('get_recipes') }}">
+                                Explore Recipes
+                            </a>
+                        </li>
+                        {% if session.user %}
+                            <li>
+                                <a class="nav-link me-3"
+                                    href="{{ url_for('get_cookbook', username=session['user']) }}">
+                                    My Cookbook
+                                </a>
+                            </li>
+                            <li class="btn-group nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center profile-img" role="button" 
+                                    id="navbarDropdownProfile" data-mdb-toggle="dropdown" aria-expanded="false">
+                                    <img src="{{ user.user_image}}" onerror="this.src='../../static/images/user.png';" 
+                                        class="rounded-circle" alt="profile picture" loading="lazy">
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+                                    <li class="nav-item">
+                                        <a class="nav-link dropdown-item" href="{{ url_for('add_recipe') }}">
+                                            Create Recipe
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link dropdown-item"
+                                            href="{{ url_for('profile', username=session['user']) }}">
+                                            View Profile
+                                        </a>
+                                    </li>
+                                    {% if session.user|lower == "admin"|lower %}
+                                        <li>
+                                            <a class="nav-link dropdown-item" href="{{ url_for('get_categories') }}">
+                                                Manage Categories
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="nav-link dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        
+                        <!-- Sign up / log in buttons -->
+                        {% else %}
+                            <li class="d-flex align-items-center">
+                                <a role="button" class="btn btn-primary me-2" href="{{ url_for('register') }}">
+                                    Sign Up
+                                </a>
+                                <a role="button" class="btn btn-secondary me-3" 
+                                    id="login-btn" href="{{ url_for('login') }}">
+                                    Log In
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="text-lg-start">
+        <!-- Grid container -->
+        <div class="container p-4">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-md-4 col-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('get_recipes') }}">
+                                Explore Recipes
+                            </a>
+                        </li>
+                        {% if session.user %}
+                            <li>
+                                <a href="{{ url_for('add_recipe') }}">
+                                    Create Recipe
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('get_cookbook', username=session['user']) }}">
+                                    My Cookbook
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('profile', username=session['user']) }}">
+                                    View Profile
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ url_for('register') }}">
+                                    Sign Up
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('login') }}">
+                                    Log In
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            
+                <!--Grid column-->
+                <div class="col-md-4 col-6 mb-md-0">
+                    <h5 class="text-uppercase mb-0">Contact</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <p>Fill out this contact form:</p>
+                            <a data-mdb-toggle="modal" data-mdb-target="#modalContact" 
+                                role="button" class="btn btn-sm">
+                                Contact Form
+                            </a>
+                        </li>
+                        <li class="py-2">
+                            <p>Or email us at: </p>
+                            <a href="mailto:info@swaadshare.com" target="_blank">
+                                info@swaadshare.com
+                            </a>
+                        </li>
+                       
+                    </ul>
+                </div>
+            
+            </div>
+        </div>
+        
+       
+        
+      
+
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
+    <!-- MDB -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sharer.js@latest/sharer.min.js"></script>
+
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}
+    {% endblock %}
+    
+</body>
+</html>
